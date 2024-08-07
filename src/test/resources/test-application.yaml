@@ -1,0 +1,21 @@
+ktor:
+  deployment:
+    port: 8080
+
+  application:
+    modules:
+      - com.whatever.ApplicationKt.module
+
+postgres:
+  user: test
+  password: test
+
+hikari:
+  driverClassName: org.postgresql.Driver
+  maximumPoolSize: 10
+  transactionIsolation: TRANSACTION_READ_COMMITTED
+  connectionTimeout: 30000
+  idleTimeout: 600000
+  maxLifetime: 1800000
+  minimumIdle: 2
+  poolName: TestHikariPool

@@ -1,23 +1,97 @@
-openapi: "3.0.3"
+openapi: 3.0.3
 info:
-  title: "Application API"
-  description: "Application API"
-  version: "1.0.0"
-servers:
-  - url: "http://0.0.0.0:8080"
+  title: Counter API
+  version: 1.0.0
 paths:
-  /:
-    get:
-      description: "Hello World!"
+  /api/v1/counter:
+    post:
+      summary: Create a new counter
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CounterDTO'
       responses:
-        "200":
-          description: "OK"
+        '201':
+          description: Counter created
+        '400':
+          description: Bad request
+    get:
+      summary: Get all counters
+      responses:
+        '200':
+          description: A list of counters
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Counter'
+  /api/v1/counter/{name}:
+    get:
+      summary: Get a counter by name
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Counter value
           content:
             text/plain:
               schema:
-                type: "string"
-              examples:
-                Example#1:
-                  value: "Hello World!"
+                type: integer
+        '404':
+          description: Counter not found
+    delete:
+      summary: Delete a counter by name
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Counter deleted
+        '404':
+          description: Counter not found
+    post:
+      summary: Increment a counter by name
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Counter incremented
+          content:
+            text/plain:
+              schema:
+                type: string
+        '404':
+          description: Counter not found
 components:
-  schemas: { }
+  schemas:
+    CounterDTO:
+      type: object
+      properties:
+        name:
+          type: string
+        value:
+          type: integer
+      required:
+        - name
+        - value
+    Counter:
+      type: object
+      properties:
+        name:
+          type: string
+        value:
+          type: integer

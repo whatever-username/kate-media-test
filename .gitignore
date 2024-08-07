@@ -34,3 +34,8 @@ out/
 
 ### VS Code ###
 .vscode/
+
+
+src/test/resources/stress-test/package-lock.json
+src/test/resources/stress-test/node_modules
+docs/

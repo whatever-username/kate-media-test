@@ -1,4 +1,4 @@
-package whatever.com.config
+package com.whatever.config
 
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
@@ -24,7 +24,7 @@ fun Application.configureDatabaseAndGetDataSource(): HikariDataSource {
 private fun Application.configureHikariDataSource() = HikariDataSource(HikariConfig().apply {
     driverClassName = environment.config.property("hikari.driverClassName").getString()
     jdbcUrl = environment.config.property("postgres.url").getString()
-    username = environment.config.property("postgres.user").getString()  // Adding username and password here
+    username = environment.config.property("postgres.user").getString()
     password = environment.config.property("postgres.password").getString()
     maximumPoolSize = environment.config.property("hikari.maximumPoolSize").getString().toInt()
     isAutoCommit = false
@@ -37,14 +37,13 @@ private fun Application.runLiquibaseMigrations(dataSource: DataSource) {
     dataSource.connection.use { connection ->
         val databaseConnection = JdbcConnection(connection)
         val database = DatabaseFactory.getInstance().findCorrectDatabaseImplementation(databaseConnection)
-        val liquibase = Liquibase("db/changelog/db.changelog-master.xml", ClassLoaderResourceAccessor(), database)
+        val liquibase = Liquibase("db/changelog/master.xml", ClassLoaderResourceAccessor(), database)
         liquibase.update(Contexts())
     }
     log.info("Liquibase migrations have finished")
 }
 
-private fun Application.configureExposed(dataSource: DataSource){
-    Database.connect(dataSource) // Connect Exposed to the HikariCP data source
-
+private fun Application.configureExposed(dataSource: DataSource) {
+    Database.connect(dataSource)
 }
 
